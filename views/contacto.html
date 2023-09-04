@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACME | CATÁLOGO</title>
+</head>
+
+<body>
+    <nav style="display: flex; align-items: center; justify-content: space-between; padding: 0 1rem;">
+        <h2>ACME</h2>
+        <ul style="display: flex; list-style: none; gap: 1rem;">
+            <li style="cursor: pointer;">
+                <a href="/">Inicio</a>
+            </li>
+            <li style="cursor: pointer;">
+                <a href="/nosotros">Nosotros</a>
+            </li>
+            <li style="cursor: pointer;">
+                <a href="/nuestros-servicios">Servicios</a>
+            </li>
+            <li style="cursor: pointer;">
+                <a href="/catalogo-clientes">Clientes</a>
+            </li>
+            <li style="cursor: pointer;">
+                <a href="/contacto">Contacto</a>
+            </li>
+
+        </ul>
+    </nav>
+    <br>
+    <div style="text-align: center;">
+        <h2 style="font-size: 1.5rem;">Bienvenido al contacto</h2>
+        <br>
+        <div class="">
+            <form id="enviarForm">
+                <div class="">
+                    <label style="display: block;" for="nombre">Nombre</label>
+                    <input type="text" name="nombre" id="nombre">
+                </div>
+                <br>
+                <div class="">
+                    <label style="display: block;" for="email">Email</label>
+                    <input type="email" name="email" id="email">
+                </div>
+                <br>
+                <div class="">
+                    <label style="display: block;" for="mensaje">Mensaje</label>
+                    <textarea name="mensaje" id="mensaje" cols="30" rows="10"></textarea>
+                </div>
+                <br>
+                <input type="submit" value="Enviar" />
+            </form>
+        </div>
+    </div>
+    <script>
+        const enviarForm = document.getElementById('enviarForm');
+        enviarForm.addEventListener('submit', async (evento) => {
+            evento.preventDefault();
+            await enviarFormulario();
+        })
+        const enviarFormulario = async () => {
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const mensaje = document.getElementById('mensaje').value;
+            const data = {
+                nombre,
+                email,
+                mensaje
+            }
+            try {
+                const response = await fetch('/enviar-form', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                    console.log(responseData);
+                    if (responseData.status === 'ok') {
+                        alert('Mensaje enviado correctamente');
+                    } else {
+                        alert('Ocurrió un error al enviar el mensaje');
+                    }
+                } else {
+                    console.error('Error en la solicitud:', response.status);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+            }
+        }
+    </script>
+</body>
+
+</html>
